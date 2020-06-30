@@ -19,6 +19,8 @@ public class UserManager {
 
         User user = serviceRequest.getUser();
 
+        serviceResponse.setUser(user);
+
         if (serviceRequest.getStatus() == ServiceRequestStatus.REGISTRATION) {
             try {
                 int id = DataBaseManager.addUser(connection, user);

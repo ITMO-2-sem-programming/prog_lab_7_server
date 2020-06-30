@@ -22,6 +22,7 @@ public class ConnectionManager {
 
 
     public ConnectionManager(int serverPort) {
+
         bufferSize = 65536;
         try {
             serverSocket = new DatagramSocket(serverPort);
@@ -30,7 +31,6 @@ public class ConnectionManager {
             throw new IllegalArgumentException("Error: Can't connect to specified port or get LocalHost address.");
         }
 
-        System.out.println("Server is running...");
     }
 
 
@@ -43,9 +43,9 @@ public class ConnectionManager {
     public void sendResponse(Response response) throws IOException {
         send(response.getClientInetAddress(), response.getClientPort(), Serializer.toByteArray(response));
         System.out.println(
-                "The packet was sent." +
-                "\nAddress : " + response.getClientInetAddress() +
-                "\nPort : " + response.getClientPort());
+                "The response was sent." +
+                "\n    Address : " + response.getClientInetAddress() +
+                "\n    Port : .. " + response.getClientPort());
 
     }
 
@@ -53,6 +53,17 @@ public class ConnectionManager {
     public void send(InetAddress clientInetAddress, int clientPort, byte[] bytes) throws IOException {
         packet = new DatagramPacket(bytes, bytes.length, clientInetAddress, clientPort);
         serverSocket.send(packet);
+    }
+
+
+    public void sendResponseAndCloseSocket(Response response) throws IOException {
+        send(response.getClientInetAddress(), response.getClientPort(), Serializer.toByteArray(response));
+        System.out.println(
+                "The response was sent." +
+                        "\n    Address : " + response.getClientInetAddress() +
+                        "\n    Port : " + response.getClientPort());
+        serverSocket.close();
+
     }
 
 
@@ -77,16 +88,19 @@ public class ConnectionManager {
         packet = new DatagramPacket(buffer, buffer.length);
         serverSocket.receive(packet);
 
-        System.out.println("Packet address : " + packet.getAddress());
-        System.out.println("packet port : " + packet.getPort());
+
+        System.out.println(
+                "Received Request:" +
+                "\n    Request address : " + packet.getAddress() +
+                "\n    Request port : .. " + packet.getPort());
 
         Request request = (Request) Serializer.toObject(buffer);
 
         request.setClientInetAddress(packet.getAddress());
         request.setClientPort(packet.getPort());
 
-        System.out.println("Rq address : " + request.getClientInetAddress());
-        System.out.println("Rq port : " + request.getClientPort());
+//        System.out.println("Rq address : " + request.getClientInetAddress());
+//        System.out.println("Rq port : " + request.getClientPort());
 
         return request;
     }

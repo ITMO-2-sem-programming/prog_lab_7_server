@@ -25,6 +25,7 @@ public class CommandManager {
         String argumentKey = commandRequest.getArgumentKey();
         MusicBand argumentMusicBand = commandRequest.getArgumentMusicBand();
 
+        commandResponse.setUser(user);
 
         try {
 

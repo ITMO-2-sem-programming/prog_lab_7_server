@@ -49,7 +49,7 @@ public class User implements Serializable {
         return String.format(
                 "User {" +
                 "\n            login = .. '%s'" +
-                "\n            password = '%s'" + password  +
+                "\n            password = '%s'" +
                 "\n        }",
                 login, password);
     }
